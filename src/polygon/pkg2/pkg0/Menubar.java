@@ -203,11 +203,7 @@ public Menubar()
    Aiuto.setGraphic(vista8);
    
    
-   
-   
-   
-   
-   
+ 
    //------------------------- Aggiungo gli itemmenu al menu File------------------------\\ 
    
    File.getItems().add(Nuovo);
@@ -299,19 +295,7 @@ public Menubar()
    
    Impostazioni.getItems().add(Coloresfondo);
    Impostazioni.getItems().add(SpessoreLinea);
- 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+
    
    //----------------------------------------------------------------------------------------------//
   
