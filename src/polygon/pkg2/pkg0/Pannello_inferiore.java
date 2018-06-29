@@ -31,7 +31,8 @@ public class Pannello_inferiore extends AnchorPane{
     private Separator separatore1;
     private Separator separatore2;
     
-    public Pannello_inferiore()
+    
+    public Pannello_inferiore(double altezza,double larghezza)
     {
         currentx = new TextField();
         currenty = new TextField();
@@ -53,10 +54,10 @@ public class Pannello_inferiore extends AnchorPane{
         current_y.setLayoutX(40);
         
        
-        currentx.setLayoutX(170);
+        currentx.setLayoutX(200);
         currentx.setLayoutY(55);
         
-        currenty.setLayoutX(170);
+        currenty.setLayoutX(200);
         currenty.setLayoutY(85);
         
         title1.setLayoutX(60);
@@ -65,15 +66,11 @@ public class Pannello_inferiore extends AnchorPane{
         currentx.setPrefSize(100, 25);
         currenty.setPrefSize(100,25);
         
-        separatore1.setPrefSize(4, 350);
+        separatore1.setPrefSize(4, larghezza/2);
         separatore1.setOrientation(Orientation.VERTICAL);
-        separatore1.setLayoutX(500);
+        separatore1.setLayoutX((larghezza/2)-200);
         separatore1.setLayoutY(0);
         
-        separatore1.setPrefSize(4, 350);
-        separatore1.setOrientation(Orientation.VERTICAL);
-        separatore1.setLayoutX(500);
-        separatore1.setLayoutY(0);
         
         set_all(currentx,currenty,current_x,current_y,title1,separatore1);
       

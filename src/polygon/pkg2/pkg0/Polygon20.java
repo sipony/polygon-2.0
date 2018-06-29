@@ -9,6 +9,7 @@ package polygon.pkg2.pkg0;
 import java.io.File;
 import static java.time.Clock.system;
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -43,6 +44,11 @@ import javafx.stage.Stage;
  * @author DAVIDE
  */
 public class Polygon20 extends Application {
+    
+    private DisegnaLinea disegno;
+    
+    
+    
     
     @Override
     public void start(Stage primaryStage) {
@@ -125,10 +131,11 @@ public class Polygon20 extends Application {
 
 
         //----------divido il rightpane(quello per il canvas e il menu interattivo in basso-------------------------------------------------------------//
-     
+        Screen screen1 =Screen.getPrimary();
+        Rectangle2D bordi = screen1.getVisualBounds();
         StackPane upPane2 = new StackPane(new Label("Uppaneright"));
         upPane2.setStyle("-fx-background-color:#d8dee3;");
-        Pannello_inferiore downPane2= new Pannello_inferiore();
+        Pannello_inferiore downPane2= new Pannello_inferiore(bordi.getHeight(),bordi.getWidth());
         downPane2.setStyle("-fx-background-color:#d7d6d5;");
         Canvas foglio = new Canvas();
          upPane2.getChildren().add(foglio);
@@ -151,16 +158,19 @@ public class Polygon20 extends Application {
         System.out.println(upPane2.getWidth());
         System.out.println(upPane2.getHeight());
          //imposto immagine di background del canvas----  
-         Image ret = new Image(getClass().getResourceAsStream("millimetrata2.jpg"));
-         BackgroundSize dimensioni=new BackgroundSize(upPane2.getPrefWidth(),upPane2.getPrefHeight(),false,false,false,true);
-         BackgroundImage backgroundimage = new BackgroundImage(ret,BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,dimensioni);
-         upPane2.setBackground(new Background(backgroundimage));
+         //Image ret = new Image(getClass().getResourceAsStream("millimetrata2.jpg"));
+         //BackgroundSize dimensioni=new BackgroundSize(upPane2.getPrefWidth(),upPane2.getPrefHeight(),false,false,false,true);
+         //BackgroundImage backgroundimage = new BackgroundImage(ret,BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,dimensioni);
+         //upPane2.setBackground(new Background(backgroundimage));
       
          SplitPane splitPane3 = new SplitPane();
          splitPane3.setOrientation(Orientation.VERTICAL);
         //---------fisso il divider del rightpane---------------//
-        upPane2.setMaxHeight(800);
-        upPane2.setMinHeight(800);
+        //bisogna necesssariamente dimensinarlo in base alle dimensioni dello schermo su cui gira il programma
+        
+        
+        upPane2.setMaxHeight(bordi.getHeight()- bordi.getHeight()/3);
+        upPane2.setMinHeight(bordi.getHeight()- bordi.getHeight()/3);
        
         //---------------------------------------------------------//
         splitPane3.getItems().addAll(upPane2, downPane2);
@@ -168,11 +178,7 @@ public class Polygon20 extends Application {
  
         
         //-------creo la gridpane per contenere i bottoni delle figure ---------------
-        
-        
-      
-        
-        
+       
        Button bottone1= new Button();
        Button bottone2= new Button();
        Button bottone3= new Button();
@@ -185,13 +191,22 @@ public class Polygon20 extends Application {
        Button bottone10= new Button();
        
        bottone1.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image1 = new Image(getClass().getResourceAsStream("linea.png"));
+       Image image1 = new Image(getClass().getResourceAsStream("linea_btn.png"));
        ImageView vista1=new ImageView(image1);
        bottone1.setGraphic(vista1);
+       bottone1.setOnMouseClicked(new EventHandler<MouseEvent>(){
+           
+            @Override
+            public void handle(MouseEvent event) {
+               disegno = new DisegnaLinea(upPane2);
+                  
+            }
        
+       
+       });
        
        bottone2.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image2 = new Image(getClass().getResourceAsStream("triangolo.png"));
+       Image image2 = new Image(getClass().getResourceAsStream("triangolo_btn.png"));
        ImageView vista2= new ImageView(image2);
        vista2.setFitHeight(25);
        vista2.setFitWidth(25);
@@ -199,7 +214,7 @@ public class Polygon20 extends Application {
        
        
        bottone3.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image3= new Image(getClass().getResourceAsStream("rettangolo.png"));
+       Image image3= new Image(getClass().getResourceAsStream("rettangolo_btn.png"));
        ImageView vista3= new ImageView(image3);
        vista3.setFitHeight(25);
        vista3.setFitWidth(25);
@@ -207,42 +222,42 @@ public class Polygon20 extends Application {
        
        
        bottone4.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image4= new Image(getClass().getResourceAsStream("cerchio.png"));
+       Image image4= new Image(getClass().getResourceAsStream("cerchio_btn.png"));
        ImageView vista4= new ImageView(image4);
        vista4.setFitHeight(25);
        vista4.setFitWidth(25);
        bottone4.setGraphic(vista4);
        
        bottone5.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image5= new Image(getClass().getResourceAsStream("rombo.png"));
+       Image image5= new Image(getClass().getResourceAsStream("rombo_btn.png"));
        ImageView vista5= new ImageView(image5);
        vista5.setFitHeight(25);
        vista5.setFitWidth(25);
        bottone5.setGraphic(vista5);
        
        bottone6.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image6= new Image(getClass().getResourceAsStream("ellisse.png"));
+       Image image6= new Image(getClass().getResourceAsStream("ellisse_btn.png"));
        ImageView vista6= new ImageView(image6);
        vista6.setFitHeight(25);
        vista6.setFitWidth(25);
        bottone6.setGraphic(vista6);
        
        bottone7.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image7= new Image(getClass().getResourceAsStream("selezione.png"));
+       Image image7= new Image(getClass().getResourceAsStream("selezione_btn.png"));
        ImageView vista7= new ImageView(image7);
        vista7.setFitHeight(25);
        vista7.setFitWidth(25);
        bottone7.setGraphic(vista7);
        
        bottone8.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image8= new Image(getClass().getResourceAsStream("sposta.png"));
+       Image image8= new Image(getClass().getResourceAsStream("sposta_btn.png"));
        ImageView vista8= new ImageView(image8);
        vista8.setFitHeight(25);
        vista8.setFitWidth(25);
        bottone8.setGraphic(vista8);
        
        bottone9.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image9= new Image(getClass().getResourceAsStream("libera.png"));
+       Image image9= new Image(getClass().getResourceAsStream("libera_btn.png"));
        ImageView vista9= new ImageView(image9);
        vista9.setFitHeight(25);
        vista9.setFitWidth(25);
@@ -251,7 +266,7 @@ public class Polygon20 extends Application {
        
        bottone10.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
 
-       Image image10 = new Image(getClass().getResourceAsStream("sega.png"));
+       Image image10 = new Image(getClass().getResourceAsStream("sega_btn.png"));
        ImageView vista10 = new ImageView(image10);
        vista10.setFitHeight(25);
        vista10.setFitWidth(25);
@@ -306,8 +321,8 @@ public class Polygon20 extends Application {
        
         
         Screen screen =Screen.getPrimary();
-        Rectangle2D bordi = screen.getVisualBounds();
-        Scene scene = new Scene(root,bordi.getWidth() ,bordi.getHeight() );
+        Rectangle2D bordi2 = screen.getVisualBounds();
+        Scene scene = new Scene(root,bordi2.getWidth() ,bordi2.getHeight() );
         
         
         
