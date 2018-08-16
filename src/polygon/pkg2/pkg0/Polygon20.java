@@ -7,8 +7,12 @@ package polygon.pkg2.pkg0;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import static java.time.Clock.system;
+import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
@@ -36,6 +40,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Path;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -45,13 +50,20 @@ import javafx.stage.Stage;
  */
 public class Polygon20 extends Application {
     
-    private DisegnaLinea disegno;
-    
+     private Button[] pulsanti;
+     private  Image Immagini[];
+     private  ImageView viste [];
+     private  String Path;
+     private  String file;
+     private  File[] Listafile;
+     private  File cartella;
+     private  GridPane griglia;
+ 
     
     
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws FileNotFoundException {
         
         
         
@@ -62,6 +74,9 @@ public class Polygon20 extends Application {
         SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(leftPane, rightPane);
         splitPane.setDividerPositions(0.25);
+        
+      
+        
         
         //--------imposto uguale la massima e la minima larghezza dell left pane per rendere
         //--------fisso il divider dello splitpane tra canvas e strumenti
@@ -74,7 +89,7 @@ public class Polygon20 extends Application {
         AnchorPane upPane = new AnchorPane(new Label("Uppaneleft"));
         upPane.setPrefWidth(100);
         upPane.setPrefHeight(610);
-        upPane.setStyle("-fx-background-color: #FFFFFF;");
+        upPane.setStyle("-fx-background-color:#d7d6d5;");
         
         //-------------------settaggi per il downpane dove ce il logo dell universita di parma -------------------------------------------------------------------//
         Pane downPane = new Pane();
@@ -91,13 +106,10 @@ public class Polygon20 extends Application {
         downPane.getChildren().add(etichetta2);
         downPane.setStyle("-fx-background-color:#d7d6d5;");
         
-      
-        
-        
-        
+
         //--------fisso il divider tra ppane e downpane -------------------//
-        upPane.setMaxHeight(400);
-        upPane.setMinHeight(400);
+        upPane.setMaxHeight(380);
+        upPane.setMinHeight(380);
         //----------------------------------------------------------//
         splitPane2.getItems().addAll(upPane, downPane);
         leftPane.getChildren().add(splitPane2);
@@ -109,6 +121,9 @@ public class Polygon20 extends Application {
         strumenti.setStyle("-fx-background-color:#d7d6d5;");
         logo.setMaxSize(100,56);
         logo.setMinSize(100,56);
+        
+        
+        
         
         
         Label etichetta = new Label();
@@ -123,7 +138,7 @@ public class Polygon20 extends Application {
         splitPane4.getItems().addAll(logo,strumenti);
         upPane.getChildren().add(splitPane4);
         //--------------------fisso il divider per separare logo strumenti e griglia strumenti-------------------//
-        
+       
 
 
 
@@ -133,13 +148,15 @@ public class Polygon20 extends Application {
         //----------divido il rightpane(quello per il canvas e il menu interattivo in basso-------------------------------------------------------------//
         Screen screen1 =Screen.getPrimary();
         Rectangle2D bordi = screen1.getVisualBounds();
-        StackPane upPane2 = new StackPane(new Label("Uppaneright"));
+        StackPane upPane2 = new StackPane();
         upPane2.setStyle("-fx-background-color:#d8dee3;");
         Pannello_inferiore downPane2= new Pannello_inferiore(bordi.getHeight(),bordi.getWidth());
         downPane2.setStyle("-fx-background-color:#d7d6d5;");
-        Canvas foglio = new Canvas();
-         upPane2.getChildren().add(foglio);
-        //---------creo canvas
+        
+        Strumenti tool = new Strumenti(strumenti,upPane2,upPane.getPrefWidth()/2,upPane.getPrefHeight()/10,primaryStage);
+
+        
+        
         upPane2.setOnMouseMoved(new EventHandler<MouseEvent>(){
             
             @Override
@@ -172,146 +189,16 @@ public class Polygon20 extends Application {
         upPane2.setMaxHeight(bordi.getHeight()- bordi.getHeight()/3);
         upPane2.setMinHeight(bordi.getHeight()- bordi.getHeight()/3);
        
-        //---------------------------------------------------------//
+        //---aggiungo il canvas e il pannello inferiore allo splipane 3------------------------------------------------------//
         splitPane3.getItems().addAll(upPane2, downPane2);
         rightPane.getChildren().add(splitPane3);
  
         
         //-------creo la gridpane per contenere i bottoni delle figure ---------------
+        String workingDir = System.getProperty("user.dir");
+	System.out.println("Current working directory : " + workingDir); 
        
-       Button bottone1= new Button();
-       Button bottone2= new Button();
-       Button bottone3= new Button();
-       Button bottone4= new Button();
-       Button bottone5= new Button();
-       Button bottone6= new Button();
-       Button bottone7= new Button();
-       Button bottone8= new Button();
-       Button bottone9= new Button();
-       Button bottone10= new Button();
-       
-       bottone1.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image1 = new Image(getClass().getResourceAsStream("linea_btn.png"));
-       ImageView vista1=new ImageView(image1);
-       bottone1.setGraphic(vista1);
-       bottone1.setOnMouseClicked(new EventHandler<MouseEvent>(){
-           
-            @Override
-            public void handle(MouseEvent event) {
-               disegno = new DisegnaLinea(upPane2);
-                  
-            }
-       
-       
-       });
-       
-       bottone2.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image2 = new Image(getClass().getResourceAsStream("triangolo_btn.png"));
-       ImageView vista2= new ImageView(image2);
-       vista2.setFitHeight(25);
-       vista2.setFitWidth(25);
-       bottone2.setGraphic(vista2);
-       
-       
-       bottone3.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image3= new Image(getClass().getResourceAsStream("rettangolo_btn.png"));
-       ImageView vista3= new ImageView(image3);
-       vista3.setFitHeight(25);
-       vista3.setFitWidth(25);
-       bottone3.setGraphic(vista3);
-       
-       
-       bottone4.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image4= new Image(getClass().getResourceAsStream("cerchio_btn.png"));
-       ImageView vista4= new ImageView(image4);
-       vista4.setFitHeight(25);
-       vista4.setFitWidth(25);
-       bottone4.setGraphic(vista4);
-       
-       bottone5.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image5= new Image(getClass().getResourceAsStream("rombo_btn.png"));
-       ImageView vista5= new ImageView(image5);
-       vista5.setFitHeight(25);
-       vista5.setFitWidth(25);
-       bottone5.setGraphic(vista5);
-       
-       bottone6.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image6= new Image(getClass().getResourceAsStream("ellisse_btn.png"));
-       ImageView vista6= new ImageView(image6);
-       vista6.setFitHeight(25);
-       vista6.setFitWidth(25);
-       bottone6.setGraphic(vista6);
-       
-       bottone7.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image7= new Image(getClass().getResourceAsStream("selezione_btn.png"));
-       ImageView vista7= new ImageView(image7);
-       vista7.setFitHeight(25);
-       vista7.setFitWidth(25);
-       bottone7.setGraphic(vista7);
-       
-       bottone8.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image8= new Image(getClass().getResourceAsStream("sposta_btn.png"));
-       ImageView vista8= new ImageView(image8);
-       vista8.setFitHeight(25);
-       vista8.setFitWidth(25);
-       bottone8.setGraphic(vista8);
-       
-       bottone9.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       Image image9= new Image(getClass().getResourceAsStream("libera_btn.png"));
-       ImageView vista9= new ImageView(image9);
-       vista9.setFitHeight(25);
-       vista9.setFitWidth(25);
-       bottone9.setGraphic(vista9);
-       
-       
-       bottone10.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-
-       Image image10 = new Image(getClass().getResourceAsStream("sega_btn.png"));
-       ImageView vista10 = new ImageView(image10);
-       vista10.setFitHeight(25);
-       vista10.setFitWidth(25);
-       bottone10.setGraphic(vista10);
-       
-       
-       
-       
-       
-       bottone2.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       bottone3.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10);
-       bottone4.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       bottone5.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10);
-       bottone6.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       bottone7.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       bottone8.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       bottone9.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       bottone10.setPrefSize(upPane.getPrefWidth()/2,upPane.getPrefHeight()/10 );
-       
-       GridPane griglia = new GridPane();
-       griglia.setVgap(6);
-       griglia.setHgap(2);
-       griglia.add(bottone1, 0, 1);
-       griglia.add(bottone2, 1, 1);
-       griglia.add(bottone3, 0, 2);
-       griglia.add(bottone4, 1, 2);
-       griglia.add(bottone5, 0, 3);
-       griglia.add(bottone6, 1, 3);
-       griglia.add(bottone7, 0, 4);
-       griglia.add(bottone8, 1, 4);
-       griglia.add(bottone9, 0, 5);
-       griglia.add(bottone10, 1, 5);
-       
-       
-      
-     
-       
-       
-       strumenti.getChildren().add(griglia);
-       
-      
-       
-        
-      
-  
+   
         
         Menubar barra = new Menubar();
         
@@ -340,4 +227,16 @@ public class Polygon20 extends Application {
         launch(args);
     }
     
+    public void lanciaevento()
+    {
+        ActionEvent evento = new ActionEvent();
+    
+    };
+    
+
 }
+   
+    
+   
+    
+  
